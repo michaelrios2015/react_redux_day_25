@@ -12,11 +12,12 @@ app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, '../index.html
 
 app.get('/api/users', async(req, res, next)=> {
     try{
+        setTimeout( async ()=>
         res.send(await User.findAll({
             attributes: {
                 exclude: ['bio']
             }
-        }));
+        })), 500);
     }
     catch(ex){
         next(ex);

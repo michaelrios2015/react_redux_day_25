@@ -35,6 +35,7 @@ class _App extends Component {
     
     render(){
         const { view } = this.state;
+        // I am not sure if I understand the differnce between props and state 
         const { loading } = this.props;
         console.log(this.state);
         if (loading){
