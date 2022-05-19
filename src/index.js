@@ -5,12 +5,12 @@ import { createRoot } from 'react-dom/client';
 import Users from './Users';
 import Nav from './Nav';
 import store from './store';
+import connect from './connect';
 
-
-class App extends Component {
+class _App extends Component {
     constructor(){
         super();
-        this.state = {...store.getState(), view: ''};
+        this.state = { view: '' };
     }
 
     async componentDidMount(){
@@ -23,11 +23,6 @@ class App extends Component {
 
         const users = (await axios.get('/api/users')).data;
 
-        // so subscribe needs to come before dispatch, not entirely sure why and acually counter intuative  
-        store.subscribe(()=> {
-            this.setState(store.getState());
-        });
-
         store.dispatch({
             type: 'LOAD_USERS',
             users
@@ -39,7 +34,8 @@ class App extends Component {
     }
     
     render(){
-        const { loading, view } = this.state
+        const { view } = this.state;
+        const { loading } = this.props;
         console.log(this.state);
         if (loading){
             return '.....loading';
@@ -53,8 +49,8 @@ class App extends Component {
     }
 }
 
-
-
+// so a component in a a component... interesting 
+const App = connect(_App);
 const container = document.querySelector('#root');
 const root = createRoot(container); 
 root.render(<App tab="home" />);
