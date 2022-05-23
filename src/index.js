@@ -5,7 +5,9 @@ import { createRoot } from 'react-dom/client';
 import Users from './Users';
 import Nav from './Nav';
 import store from './store';
-import connect from './connect';
+// import connect from './connect';
+// this will be how react redux connects to the store I believe
+import { Provider, connect } from 'react-redux';
 
 class _App extends Component {
     constructor(){
@@ -20,16 +22,16 @@ class _App extends Component {
         })
 
         this.setState({ view: window.location.hash.slice(1)});
+        this.props.load();
+        // const users = (await axios.get('/api/users')).data;
 
-        const users = (await axios.get('/api/users')).data;
-
-        store.dispatch({
-            type: 'LOAD_USERS',
-            users
-        });
-        store.dispatch({
-            type: 'LOADED'
-        });
+        // store.dispatch({
+        //     type: 'LOAD_USERS',
+        //     users
+        // });
+        // store.dispatch({
+        //     type: 'LOADED'
+        // });
 
     }
     
@@ -50,9 +52,35 @@ class _App extends Component {
     }
 }
 
+// so we don't need to return the whole state
+const mapStateToProps = ({ loading }) => {
+    return {
+        loading
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        load: async()=> {
+            const users = (await axios.get('/api/users')).data;
+
+            dispatch({
+                type: 'LOAD_USERS',
+                users
+            });
+            dispatch({
+                type: 'LOADED'
+            });
+
+        }
+    }
+};
 // so a component in a a component... interesting 
-const App = connect(_App);
+const App = connect(mapStateToProps, mapDispatchToProps)(_App);
+
+
 const container = document.querySelector('#root');
 const root = createRoot(container); 
-root.render(<App tab="home" />);
+// so this hopefully then lets react redux know where we are connnecting to the store
+root.render(<Provider store={ store }><App tab="home" /></Provider>);
 
