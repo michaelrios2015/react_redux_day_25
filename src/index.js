@@ -22,16 +22,8 @@ class _App extends Component {
         })
 
         this.setState({ view: window.location.hash.slice(1)});
+        //so we are calling the function from here and it's in props  
         this.props.load();
-        // const users = (await axios.get('/api/users')).data;
-
-        // store.dispatch({
-        //     type: 'LOAD_USERS',
-        //     users
-        // });
-        // store.dispatch({
-        //     type: 'LOADED'
-        // });
 
     }
     
@@ -62,8 +54,11 @@ const mapStateToProps = ({ loading }) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         load: async()=> {
+            // gets users from database
             const users = (await axios.get('/api/users')).data;
-
+            
+            // puts them in store
+            // these know to dispatch to the store
             dispatch({
                 type: 'LOAD_USERS',
                 users

@@ -1,3 +1,5 @@
+// this was our homemade version of connect from react redux so we could get some kind of idea of what was happening
+
 import React, { Component } from "react";
 
 import store from './store';
